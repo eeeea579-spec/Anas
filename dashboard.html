@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FF Tournament | Dashboard</title>
+    <style>
+        body { margin: 0; background-color: #121212; color: white; font-family: sans-serif; }
+        
+        /* Header */
+        .header { background: #FF5722; padding: 15px; text-align: center; font-size: 20px; font-weight: bold; }
+        
+        /* Tab Content Area */
+        .tab-content { padding: 20px; display: none; }
+        .active-tab { display: block; }
+        
+        /* Card Style */
+        .card { background: #1e1e1e; padding: 15px; border-radius: 8px; margin-bottom: 15px; border-left: 4px solid #FF5722; }
+        
+        /* Bottom Navigation Bar */
+        .bottom-nav { 
+            position: fixed; bottom: 0; width: 100%; background: #1e1e1e; 
+            display: flex; justify-content: space-around; padding: 10px 0; border-top: 1px solid #333;
+        }
+        .nav-btn { 
+            background: none; border: none; color: #888; font-size: 16px; 
+            cursor: pointer; padding: 10px; width: 100%;
+        }
+        .active-btn { color: #FF5722; font-weight: bold; border-bottom: 2px solid #FF5722; }
+    </style>
+</head>
+<body>
+
+    <div class="header">FF Clash Tournament</div>
+
+    <div id="home" class="tab-content active-tab">
+        <div class="card">
+            <h3 style="color: #FF5722; margin-top:0;">Next Match</h3>
+            <p>📅 Date: 05 May 2026</p>
+            <p>⏰ Time: 8:00 PM</p>
+            <p>👥 Slots Left: 15/48</p>
+        </div>
+        <div class="card">
+            <h3>Rules & Prize</h3>
+            <p>- Entry Fee: ₹20</p>
+            <p>- Per Kill: ₹10 | Booyah: ₹100</p>
+            <p>- No Emulators, No Teaming.</p>
+        </div>
+    </div>
+
+    <div id="participate" class="tab-content">
+        <div class="card">
+            <h3>Pay Entry Fee</h3>
+            <p>Scan the QR code or pay on UPI ID: <b>admin@upi</b></p>
+            <div style="width: 150px; height: 150px; background: #333; margin: 10px auto; line-height: 150px; text-align: center;">[QR Code Photo]</div>
+            
+            <input type="text" placeholder="Enter 12-digit UTR Number" style="width: 100%; padding: 10px; margin-top: 10px; box-sizing: border-box; background: #2a2a2a; color: white; border: 1px solid #444;">
+            <button style="width: 100%; padding: 10px; background: #FF5722; color: white; border: none; margin-top: 10px; cursor: pointer;">Submit Payment</button>
+        </div>
+    </div>
+
+    <div id="chat" class="tab-content">
+        <div class="card">
+            <h3>Room Details & Chat</h3>
+            <p style="color: #FF5722;">Room ID and Password will appear here 15 mins before the match.</p>
+            <hr style="border-color: #333;">
+            <p><b>Admin:</b> Welcome to the tournament! Payment screenshot yahan bhejein.</p>
+        </div>
+    </div>
+
+    <div class="bottom-nav">
+        <button class="nav-btn active-btn" onclick="switchTab('home', this)">Home</button>
+        <button class="nav-btn" onclick="switchTab('participate', this)">Participate</button>
+        <button class="nav-btn" onclick="switchTab('chat', this)">Chat</button>
+    </div>
+
+    <script>
+        function switchTab(tabId, btn) {
+            // Sabhi tabs hide karo
+            let contents = document.getElementsByClassName('tab-content');
+            for (let i = 0; i < contents.length; i++) {
+                contents[i].classList.remove('active-tab');
+            }
+            // Sabhi buttons se active color hatao
+            let btns = document.getElementsByClassName('nav-btn');
+            for (let i = 0; i < btns.length; i++) {
+                btns[i].classList.remove('active-btn');
+            }
+            // Click kiye gaye tab aur button ko active karo
+            document.getElementById(tabId).classList.add('active-tab');
+            btn.classList.add('active-btn');
+        }
+    </script>
+
+</body>
+</html>
