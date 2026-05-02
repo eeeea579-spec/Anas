@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Complete Profile | FF Clash</title>
+    <style>
+        body { background-color: #121212; color: white; font-family: sans-serif; margin: 0; padding: 20px; }
+        .container { background: #1e1e1e; padding: 25px; border-radius: 10px; border-top: 4px solid #FF5722; }
+        h2 { color: #FF5722; margin-top: 0; }
+        label { display: block; margin: 15px 0 5px; color: #bbb; font-size: 14px; }
+        input, select { 
+            width: 100%; padding: 12px; border: 1px solid #333; border-radius: 5px; 
+            background: #2a2a2a; color: white; box-sizing: border-box; 
+        }
+        .btn-save { 
+            width: 100%; padding: 15px; background: #FF5722; border: none; 
+            color: white; font-weight: bold; border-radius: 5px; margin-top: 25px; 
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>Set Your Profile</h2>
+        <p style="font-size: 12px; color: #888;">Ye details winner ko prize bhejne ke liye zaruri hain.</p>
+
+        <label>Full Name (As per Bank/UPI)</label>
+        <input type="text" placeholder="e.g. Abu Anas">
+
+        <label>Free Fire UID</label>
+        <input type="number" placeholder="Enter your 10 digit UID">
+
+        <label>Withdrawal Method</label>
+        <select>
+            <option>UPI (GPay/PhonePe/Paytm)</option>
+            <option>Bank Transfer</option>
+        </select>
+
+        <label>UPI ID or Account Number</label>
+        <input type="text" placeholder="Enter details here">
+
+        <button class="btn-save" onclick="location.href='index.html'">Save Profile</button>
+    </div>
+
+</body>
+</html>
