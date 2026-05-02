@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <title>Abu Anas - Personal Website</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f2f5;
+        }
+        .card {
+            background: white;
+            padding: 50px;
+            border-radius: 15px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        h1 { color: #333; }
+        p { color: #666; }
+    </style>
+</head>
+<body>
+
+    <div class="card">
+        <h1>Abu Anas</h1>
+        <p>BSc Computer Science Student</p>
+        <p>Welcome to my first personal website!</p>
+    </div>
+
+</body>
+</html>
