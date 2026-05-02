@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel | FF Clash</title>
+    <style>
+        body { background: #121212; color: white; font-family: sans-serif; margin: 0; padding: 20px; }
+        .header { color: #FF5722; text-align: center; border-bottom: 2px solid #333; padding-bottom: 10px; margin-bottom: 20px; }
+        .card { background: #1e1e1e; padding: 15px; border-radius: 8px; margin-bottom: 15px; border-left: 4px solid #FF5722; }
+        input, button { width: 100%; padding: 10px; margin-top: 10px; box-sizing: border-box; border-radius: 5px; }
+        input { background: #2a2a2a; border: 1px solid #444; color: white; }
+        button { background: #FF5722; color: white; border: none; font-weight: bold; cursor: pointer; }
+        .btn-green { background: #28a745; width: 48%; display: inline-block; }
+        .btn-red { background: #dc3545; width: 48%; display: inline-block; float: right; }
+    </style>
+</head>
+<body>
+
+    <h2 class="header">Admin Dashboard (Secret)</h2>
+
+    <div class="card">
+        <h3>Update Match Details</h3>
+        <input type="text" placeholder="Enter New Date (e.g. 10 May)">
+        <input type="text" placeholder="Enter New Time (e.g. 9:00 PM)">
+        <button>Update Live Website</button>
+    </div>
+
+    <div class="card">
+        <h3>Pending Payments</h3>
+        <p>Player: Abu Anas</p>
+        <p>UID: 1234567890</p>
+        <p>UTR: 987654321012</p>
+        <button class="btn-green">Approve</button>
+        <button class="btn-red">Reject</button>
+    </div>
+
+    <div class="card">
+        <h3>Send Room Details</h3>
+        <input type="text" placeholder="Room ID">
+        <input type="text" placeholder="Password">
+        <button>Publish to Approved Players</button>
+    </div>
+
+</body>
+</html>
