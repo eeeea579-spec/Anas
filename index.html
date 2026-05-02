@@ -1,35 +1,72 @@
 <!DOCTYPE html>
-<html lang="hi">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Abu Anas - Personal Website</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FF Tournament | Login</title>
     <style>
         body {
+            background-color: #121212; /* Dark Theme */
+            color: #ffffff;
             font-family: Arial, sans-serif;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
             margin: 0;
-            background-color: #f0f2f5;
         }
-        .card {
-            background: white;
-            padding: 50px;
-            border-radius: 15px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        .login-box {
+            background: #1e1e1e;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(255, 87, 34, 0.4); /* Orange Glow */
+            width: 85%;
+            max-width: 350px;
             text-align: center;
         }
-        h1 { color: #333; }
-        p { color: #666; }
+        .login-box h1 {
+            color: #FF5722; /* Free Fire Orange */
+            margin-bottom: 5px;
+        }
+        .login-box p {
+            color: #aaaaaa;
+            font-size: 14px;
+            margin-bottom: 25px;
+        }
+        input {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border: 1px solid #333;
+            border-radius: 5px;
+            background: #2a2a2a;
+            color: white;
+            box-sizing: border-box;
+            font-size: 16px;
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #FF5722;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 15px;
+        }
     </style>
 </head>
 <body>
 
-    <div class="card">
-        <h1>Abu Anas</h1>
-        <p>BSc Computer Science Student</p>
-        <p>Welcome to my first personal website!</p>
+    <div class="login-box">
+        <h1>FF Clash</h1>
+        <p>Login to play and win</p>
+        
+        <input type="number" id="phone" placeholder="10-digit Mobile Number">
+        
+        <button onclick="alert('OTP sent! (Logic baad mein lagayenge)')">Get OTP</button>
     </div>
 
 </body>
