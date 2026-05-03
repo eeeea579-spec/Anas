@@ -48,14 +48,14 @@
         import { getAuth } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
         import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-        // Firebase Config (Wahi purana wala)
+        // Aapka NAYA Firebase Config
         const firebaseConfig = {
-            apiKey: "AIzaSyA3gh594oSBNwGgTTAebVP_wPlGKp43c0M",
-            authDomain: "ff-clash-622c8.firebaseapp.com",
-            projectId: "ff-clash-622c8",
-            storageBucket: "ff-clash-622c8.firebasestorage.app",
-            messagingSenderId: "575296634837",
-            appId: "1:575296634837:web:142bb544bae2a3d491475c"
+          apiKey: "AIzaSyAghO35iqcGGHjnimNdsvvVZCUouncjdBo",
+          authDomain: "ff-clash2.firebaseapp.com",
+          projectId: "ff-clash2",
+          storageBucket: "ff-clash2.firebasestorage.app",
+          messagingSenderId: "101233669042",
+          appId: "1:101233669042:web:c74f117c2be4a571beeaab"
         };
 
         const app = initializeApp(firebaseConfig);
@@ -64,7 +64,7 @@
 
         document.getElementById('save-btn').onclick = async function() {
             const user = auth.currentUser;
-            if(!user) { alert("Pehle login karein!"); return; }
+            if(!user) { alert("Pehle login karein!"); window.location.href = "index.html"; return; }
 
             const data = {
                 fullName: document.getElementById('p_name').value,
@@ -76,7 +76,6 @@
             };
 
             try {
-                // Database mein 'Users' naam ke folder mein data save hoga
                 await setDoc(doc(db, "Users", user.uid), data);
                 alert("Profile Saved!");
                 window.location.href = "dashboard.html";
