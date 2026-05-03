@@ -5,80 +5,85 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login | FF Clash</title>
     <style>
-        body { background: #121212; color: white; font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
-        .login-card { background: #1e1e1e; padding: 30px; border-radius: 15px; width: 90%; max-width: 400px; text-align: center; border: 1px solid #333; }
-        h2 { color: #FF5722; margin-bottom: 20px; }
-        input { width: 100%; padding: 12px; margin: 10px 0; border-radius: 8px; border: 1px solid #444; background: #2a2a2a; color: white; box-sizing: border-box; font-size: 16px; }
-        button { width: 100%; padding: 12px; background: #FF5722; color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 10px; font-size: 16px; }
-        #recaptcha-container { margin-top: 15px; }
-        .msg { font-size: 12px; color: #aaa; margin-top: 10px; }
+        body { background-color: #121212; color: white; font-family: sans-serif; text-align: center; padding: 20px; }
+        .container { background: #1e1e1e; padding: 25px; border-radius: 10px; max-width: 400px; margin: auto; border-top: 4px solid #FF5722; }
+        input { width: 90%; padding: 12px; margin: 10px 0; border-radius: 5px; border: 1px solid #333; background: #2a2a2a; color: white; box-sizing: border-box; }
+        button { width: 100%; padding: 15px; background: #FF5722; color: white; border: none; border-radius: 5px; font-weight: bold; cursor: pointer; margin-top: 15px; }
+        #recaptcha-container { margin-top: 15px; display: flex; justify-content: center; }
     </style>
 </head>
 <body>
-
-    <div class="login-card">
-        <h2>FF CLASH LOGIN</h2>
-        <div id="login-section">
-            <p>Enter phone with +91</p>
-            <input type="tel" id="phoneNumber" placeholder="+91 0000000000" value="+91">
+    <div class="container">
+        <h2 style="color: #FF5722;">FF CLASH LOGIN</h2>
+        
+        <div id="step1">
+            <p style="color: #bbb; font-size: 14px;">Apna mobile number dalein</p>
+            <input type="tel" id="phone" placeholder="+91xxxxxxxxxx" value="+91">
             <div id="recaptcha-container"></div>
-            <button id="send-btn" onclick="sendOTP()">Get OTP</button>
+            <button id="get-otp-btn">Get OTP</button>
         </div>
 
-        <div id="otp-section" style="display:none;">
-            <p>Enter 6-Digit OTP</p>
-            <input type="number" id="otpCode" placeholder="Enter OTP">
-            <button onclick="verifyOTP()">Verify & Login</button>
+        <div id="step2" style="display: none;">
+            <p style="color: #bbb; font-size: 14px;">Phone par aaya code dalein</p>
+            <input type="number" id="otp" placeholder="Enter 6-digit OTP">
+            <button id="verify-otp-btn">Verify & Login</button>
         </div>
-        <p class="msg">Asli OTP aane mein 10-20 sec lag sakte hain.</p>
     </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getAuth, RecaptchaVerifier, signInWithPhoneNumber } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
+        // Aapka NAYA Firebase Config
         const firebaseConfig = {
-            apiKey: "AIzaSyA3gh594oSBNwGgTTAebVP_wPlGKp43c0M",
-            authDomain: "ff-clash-622c8.firebaseapp.com",
-            projectId: "ff-clash-622c8",
-            storageBucket: "ff-clash-622c8.firebasestorage.app",
-            messagingSenderId: "575296634837",
-            appId: "1:575296634837:web:142bb544bae2a3d491475c"
+          apiKey: "AIzaSyAghO35iqcGGHjnimNdsvvVZCUouncjdBo",
+          authDomain: "ff-clash2.firebaseapp.com",
+          projectId: "ff-clash2",
+          storageBucket: "ff-clash2.firebasestorage.app",
+          messagingSenderId: "101233669042",
+          appId: "1:101233669042:web:c74f117c2be4a571beeaab"
         };
 
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
+        auth.useDeviceLanguage();
 
-        window.sendOTP = function() {
-            const number = document.getElementById('phoneNumber').value;
-            if(number.length < 13) { alert("Please enter full number with +91"); return; }
+        window.recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha-container', {
+          'size': 'normal',
+          'callback': (response) => {
+            // reCAPTCHA solved
+          }
+        });
+
+        document.getElementById('get-otp-btn').onclick = () => {
+            const phoneNumber = document.getElementById('phone').value;
+            if(phoneNumber.length < 13) { alert("Sahi number dalein +91 ke sath"); return; }
             
-            // ReCaptcha setup
-            window.recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha-container', {
-                'size': 'normal'
-            });
-            
-            signInWithPhoneNumber(auth, number, window.recaptchaVerifier)
+            const appVerifier = window.recaptchaVerifier;
+
+            signInWithPhoneNumber(auth, phoneNumber, appVerifier)
                 .then((confirmationResult) => {
                     window.confirmationResult = confirmationResult;
-                    document.getElementById('login-section').style.display = 'none';
-                    document.getElementById('otp-section').style.display = 'block';
-                    alert("OTP Sent successfully!");
-                }).catch((error) => { 
+                    document.getElementById('step1').style.display = 'none';
+                    document.getElementById('step2').style.display = 'block';
+                    alert("OTP Sent! Apna message check karein.");
+                }).catch((error) => {
                     alert("Error: " + error.message);
-                    if(window.recaptchaVerifier) window.recaptchaVerifier.clear();
+                    window.recaptchaVerifier.render().then(function(widgetId) {
+                      grecaptcha.reset(widgetId);
+                    });
                 });
-        }
+        };
 
-        window.verifyOTP = function() {
-            const code = document.getElementById('otpCode').value;
+        document.getElementById('verify-otp-btn').onclick = () => {
+            const code = document.getElementById('otp').value;
             window.confirmationResult.confirm(code).then((result) => {
-                // Login Success
+                alert("Login Successful!");
                 window.location.href = "profile.html";
-            }).catch((error) => { 
-                alert("Invalid OTP. Dubara try karein."); 
+            }).catch((error) => {
+                alert("Galat OTP! Wapas try karein.");
             });
-        }
+        };
     </script>
 </body>
 </html>
