@@ -25,16 +25,16 @@
         <p>Tournament mein participate karne ke liye apne Google account se login karein.</p>
         
         <button class="google-btn" id="google-login">
-            <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/action/google.svg" width="20" alt="G">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg" width="20" alt="G">
             Sign in with Google
         </button>
     </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getAuth, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { getAuth, GoogleAuthProvider, signInWithRedirect, getRedirectResult } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
-        // Aapka Naya Config
+        // Aapka Config
         const firebaseConfig = {
           apiKey: "AIzaSyAghO35iqcGGHjnimNdsvvVZCUouncjdBo",
           authDomain: "ff-clash2.firebaseapp.com",
@@ -48,13 +48,19 @@
         const auth = getAuth(app);
         const provider = new GoogleAuthProvider();
 
+        // 1. Jab user Google se wapas aayega, toh ye code use pakdega aur profile par bhej dega
+        getRedirectResult(auth).then((result) => {
+            if (result !== null) {
+                // Login successful ho gaya hai
+                window.location.href = "profile.html";
+            }
+        }).catch((error) => {
+            alert("Login failed: " + error.message);
+        });
+
+        // 2. Button dabane par Redirect shuru hoga
         document.getElementById('google-login').onclick = () => {
-            signInWithPopup(auth, provider)
-                .then((result) => {
-                    window.location.href = "profile.html";
-                }).catch((error) => {
-                    alert("Login failed: " + error.message);
-                });
+            signInWithRedirect(auth, provider);
         };
     </script>
 </body>
