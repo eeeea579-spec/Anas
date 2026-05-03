@@ -6,7 +6,7 @@
     <title>Complete Profile | FF Clash</title>
     <style>
         body { background-color: #121212; color: white; font-family: sans-serif; margin: 0; padding: 20px; }
-        .container { background: #1e1e1e; padding: 25px; border-radius: 10px; border-top: 4px solid #FF5722; max-width: 500px; margin: auto; }
+        .container { background: #1e1e1e; padding: 25px; border-radius: 10px; border-top: 4px solid #FF5722; max-width: 500px; margin: 40px auto; }
         h2 { color: #FF5722; margin-top: 0; }
         label { display: block; margin: 15px 0 5px; color: #bbb; font-size: 14px; }
         input, select { 
@@ -15,8 +15,9 @@
         }
         .btn-save { 
             width: 100%; padding: 15px; background: #FF5722; border: none; 
-            color: white; font-weight: bold; border-radius: 5px; margin-top: 25px; cursor: pointer;
+            color: white; font-weight: bold; border-radius: 5px; margin-top: 25px; cursor: pointer; font-size: 16px;
         }
+        .btn-save:hover { background: #e64a19; }
     </style>
 </head>
 <body>
@@ -29,7 +30,7 @@
         <input type="text" id="p_name" placeholder="e.g. Abu Anas">
 
         <label>Free Fire UID</label>
-        <input type="number" id="p_uid" placeholder="10 digit UID">
+        <input type="number" id="p_uid" placeholder="Enter your 10 digit UID">
 
         <label>Withdrawal Method</label>
         <select id="p_method">
@@ -45,10 +46,9 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getAuth } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
         import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-        // Aapka Firebase Config
         const firebaseConfig = {
           apiKey: "AIzaSyAghO35iqcGGHjnimNdsvvVZCUouncjdBo",
           authDomain: "ff-clash2.firebaseapp.com",
@@ -62,16 +62,32 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
 
+        // Check login status
+        onAuthStateChanged(auth, (user) => {
+            if (!user) {
+                window.location.href = "index.html";
+            }
+        });
+
         document.getElementById('save-btn').onclick = async function() {
             const user = auth.currentUser;
-            if(!user) { alert("Pehle login karein!"); window.location.href = "index.html"; return; }
+            if(!user) { alert("Pehle login karein!"); return; }
+
+            const name = document.getElementById('p_name').value;
+            const uid = document.getElementById('p_uid').value;
+            const details = document.getElementById('p_details').value;
+
+            if(!name || !uid || !details) {
+                alert("Please saari details bharein!");
+                return;
+            }
 
             const data = {
-                fullName: document.getElementById('p_name').value,
-                ffUid: document.getElementById('p_uid').value,
+                fullName: name,
+                ffUid: uid,
                 method: document.getElementById('p_method').value,
-                paymentDetails: document.getElementById('p_details').value,
-                email: user.email, // Phone number ki jagah ab email save hoga
+                paymentDetails: details,
+                email: user.email,
                 timestamp: new Date()
             };
 
