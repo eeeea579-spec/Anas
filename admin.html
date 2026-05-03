@@ -5,42 +5,155 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Panel | FF Clash</title>
     <style>
-        body { background: #121212; color: white; font-family: sans-serif; margin: 0; padding: 20px; }
-        .header { color: #FF5722; text-align: center; border-bottom: 2px solid #333; padding-bottom: 10px; margin-bottom: 20px; }
-        .card { background: #1e1e1e; padding: 15px; border-radius: 8px; margin-bottom: 15px; border-left: 4px solid #FF5722; }
-        input, button { width: 100%; padding: 10px; margin-top: 10px; box-sizing: border-box; border-radius: 5px; }
-        input { background: #2a2a2a; border: 1px solid #444; color: white; }
-        button { background: #FF5722; color: white; border: none; font-weight: bold; cursor: pointer; }
-        .btn-green { background: #28a745; width: 48%; display: inline-block; }
-        .btn-red { background: #dc3545; width: 48%; display: inline-block; float: right; }
+        body { background-color: #121212; color: white; font-family: sans-serif; padding: 15px; margin: 0; }
+        .container { max-width: 800px; margin: auto; }
+        .admin-card { background: #1e1e1e; padding: 20px; border-radius: 10px; border-top: 4px solid #FF5722; margin-bottom: 30px; box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
+        h2 { color: #FF5722; text-align: center; text-transform: uppercase; margin-top: 0; }
+        h3 { color: #FF5722; border-bottom: 1px solid #333; padding-bottom: 10px; }
+        label { display: block; margin: 15px 0 5px; color: #bbb; font-weight: bold; font-size: 14px; }
+        textarea, input { width: 100%; padding: 12px; background: #2a2a2a; border: 1px solid #333; color: white; border-radius: 5px; box-sizing: border-box; }
+        button { width: 100%; padding: 15px; background: #FF5722; color: white; border: none; border-radius: 5px; font-weight: bold; margin-top: 20px; cursor: pointer; font-size: 16px; }
+        button:hover { background: #e64a19; }
+        
+        /* Players Table Style */
+        .table-container { overflow-x: auto; background: #1e1e1e; border-radius: 10px; padding: 10px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 14px; }
+        th { background: #2a2a2a; color: #FF5722; text-align: left; padding: 12px; border-bottom: 2px solid #333; }
+        td { padding: 12px; border-bottom: 1px solid #333; color: #ddd; }
+        tr:hover { background: #252525; }
+
+        .lock-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #121212; display: flex; align-items: center; justify-content: center; z-index: 100; flex-direction: column; }
     </style>
 </head>
 <body>
 
-    <h2 class="header">Admin Dashboard (Secret)</h2>
-
-    <div class="card">
-        <h3>Update Match Details</h3>
-        <input type="text" placeholder="Enter New Date (e.g. 10 May)">
-        <input type="text" placeholder="Enter New Time (e.g. 9:00 PM)">
-        <button>Update Live Website</button>
+    <div id="admin-lock" class="lock-screen">
+        <h2 style="color:white;">FF CLASH ADMIN</h2>
+        <p>Verifying Owner Access...</p>
     </div>
 
-    <div class="card">
-        <h3>Pending Payments</h3>
-        <p>Player: Abu Anas</p>
-        <p>UID: 1234567890</p>
-        <p>UTR: 987654321012</p>
-        <button class="btn-green">Approve</button>
-        <button class="btn-red">Reject</button>
+    <div class="container">
+        <div class="admin-card">
+            <h2>Website Control</h2>
+            
+            <label>Tournament Rules (Text Format)</label>
+            <textarea id="rules-input" rows="4" placeholder="Rules yahan likhein..."></textarea>
+
+            <label>Rules Photo URL (Direct Link)</label>
+            <input type="text" id="rules-img-input" placeholder="https://example.com/rules.jpg">
+
+            <label>Payment QR Code URL (Direct Link)</label>
+            <input type="text" id="qr-url-input" placeholder="https://example.com/my-qr.png">
+
+            <button id="update-btn">Save & Update Website</button>
+        </div>
+
+        <div class="admin-card">
+            <h3>Registered Players</h3>
+            <p style="font-size: 12px; color: #888; margin-bottom: 15px;">Niche un sabhi players ki list hai jinhone profile complete ki hai.</p>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>FF UID</th>
+                            <th>Email Address</th>
+                        </tr>
+                    </thead>
+                    <tbody id="player-list-body">
+                        <tr><td colspan="3" style="text-align:center;">Loading players...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
 
-    <div class="card">
-        <h3>Send Room Details</h3>
-        <input type="text" placeholder="Room ID">
-        <input type="text" placeholder="Password">
-        <button>Publish to Approved Players</button>
-    </div>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { getFirestore, doc, setDoc, getDoc, collection, onSnapshot } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
+        const firebaseConfig = {
+          apiKey: "AIzaSyAghO35iqcGGHjnimNdsvvVZCUouncjdBo",
+          authDomain: "ff-clash2.firebaseapp.com",
+          projectId: "ff-clash2",
+          storageBucket: "ff-clash2.firebasestorage.app",
+          messagingSenderId: "101233669042",
+          appId: "1:101233669042:web:c74f117c2be4a571beeaab"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        // ZAROORI: Apni Gmail ID yahan likhein
+        const OWNER_EMAIL = "anasabu707@gmail.com"; 
+
+        onAuthStateChanged(auth, (user) => {
+            if (user && user.email === OWNER_EMAIL) {
+                document.getElementById('admin-lock').style.display = 'none';
+                loadCurrentSettings();
+                loadPlayerList();
+            } else {
+                alert("Access Denied! Sirf Owner hi is page ko dekh sakta hai.");
+                window.location.href = "index.html";
+            }
+        });
+
+        // 1. Purane Settings load karein
+        async function loadCurrentSettings() {
+            const docSnap = await getDoc(doc(db, "AppData", "TournamentSettings"));
+            if (docSnap.exists()) {
+                const data = docSnap.data();
+                document.getElementById('rules-input').value = data.rules || "";
+                document.getElementById('rules-img-input').value = data.rulesImageUrl || "";
+                document.getElementById('qr-url-input').value = data.qrUrl || "";
+            }
+        }
+
+        // 2. Players ki list live load karein
+        function loadPlayerList() {
+            onSnapshot(collection(db, "Users"), (snapshot) => {
+                const tbody = document.getElementById('player-list-body');
+                tbody.innerHTML = ""; // Purani list saaf karein
+
+                if(snapshot.empty) {
+                    tbody.innerHTML = "<tr><td colspan='3' style='text-align:center;'>Abhi tak koi player nahi aaya.</td></tr>";
+                    return;
+                }
+
+                snapshot.forEach((doc) => {
+                    const player = doc.data();
+                    const row = `
+                        <tr>
+                            <td>${player.fullName || 'N/A'}</td>
+                            <td>${player.ffUid || 'N/A'}</td>
+                            <td style="font-size:12px;">${player.email || 'N/A'}</td>
+                        </tr>
+                    `;
+                    tbody.innerHTML += row;
+                });
+            });
+        }
+
+        // 3. Data Update karein
+        document.getElementById('update-btn').onclick = async () => {
+            const rules = document.getElementById('rules-input').value;
+            const rulesImg = document.getElementById('rules-img-input').value;
+            const qrUrl = document.getElementById('qr-url-input').value;
+
+            try {
+                await setDoc(doc(db, "AppData", "TournamentSettings"), {
+                    rules: rules,
+                    rulesImageUrl: rulesImg,
+                    qrUrl: qrUrl,
+                    lastUpdated: new Date()
+                });
+                alert("Website Updated!");
+            } catch (e) {
+                alert("Update failed: " + e.message);
+            }
+        };
+    </script>
 </body>
 </html>
