@@ -32,9 +32,9 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getAuth, GoogleAuthProvider, signInWithRedirect, getRedirectResult } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { getAuth, GoogleAuthProvider, signInWithRedirect, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
-        // Aapka Config
+        // Aapka Config Code
         const firebaseConfig = {
           apiKey: "AIzaSyAghO35iqcGGHjnimNdsvvVZCUouncjdBo",
           authDomain: "ff-clash2.firebaseapp.com",
@@ -48,17 +48,15 @@
         const auth = getAuth(app);
         const provider = new GoogleAuthProvider();
 
-        // 1. Jab user Google se wapas aayega, toh ye code use pakdega aur profile par bhej dega
-        getRedirectResult(auth).then((result) => {
-            if (result !== null) {
-                // Login successful ho gaya hai
-                window.location.href = "profile.html";
+        // 1. MASTER DETECTOR: Ye continuously check karega ki user logged in hai ya nahi
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                // Jaise hi login milega, turant profile par fenk dega
+                window.location.replace("profile.html");
             }
-        }).catch((error) => {
-            alert("Login failed: " + error.message);
         });
 
-        // 2. Button dabane par Redirect shuru hoga
+        // 2. Button dabane par login process shuru hoga
         document.getElementById('google-login').onclick = () => {
             signInWithRedirect(auth, provider);
         };
